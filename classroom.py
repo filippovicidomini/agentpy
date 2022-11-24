@@ -1,17 +1,34 @@
 import agentpy as ap
-from student import Student
+import random
+import clear_screen
+
+banco = (5, 5)
 
 
-class Classroom(ap.Model):
-    def setup(self):
-        self.space = ap.grid2d(10, 10)
-        self.agents = ap.AgentList(self, Student, 10)
-        self.space.add_agents(self.agents)
-        self.agents.setup_pos(self.space)
+def output(grid):
+    clear_screen.clear_screen()
+    for row in grid.grid:
+        for cell in row:
 
-    def step(self):
-        self.agents.step()
+            if str(cell[0]) == 'AgentSet (1 object)':
+                print('X', end='  ')
+            else:
+                print('.', end='  ')
+
+        print()
 
 
-classroom = Classroom()
-print(classroom)
+model = ap.Model()
+agents = ap.AgentList(model, 10)
+grid = ap.Grid(model, (10, 10), track_empty=True)
+grid.add_agents(agents)
+# print(grid.positions)
+
+
+check: bool = True
+while check:
+    for i in range(10):
+        grid.move_by(agents[i], (random.randint(-1, 1), random.randint(-1, 1)))
+    output(grid)
+    if grid.positions[agents[0]] == banco:
+        check = False
